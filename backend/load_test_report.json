@@ -1,0 +1,168 @@
+{
+  "timestamp": "2026-11-12T12:24:57.995818",
+  "target": "http://127.0.0.1:8000",
+  "summaries": [
+    {
+      "concurrency": 10,
+      "total_requests": 160,
+      "successful_requests": 140,
+      "failed_requests": 20,
+      "error_rate_pct": 12.5,
+      "duration_sec": 2.25,
+      "requests_per_sec": 71.23,
+      "latency_stats_ms": {
+        "avg": 86.61,
+        "median_p50": 31.02,
+        "p95": 455.7,
+        "p99": 1341.68,
+        "min": 2.95,
+        "max": 1474.97
+      },
+      "scenario_breakdown": {
+        "admin_dashboard": {
+          "count": 10,
+          "success": 10,
+          "errors": 0,
+          "avg_ms": 33.61,
+          "p95_ms": 5.94
+        },
+        "browse_catalog": {
+          "count": 50,
+          "success": 50,
+          "errors": 0,
+          "avg_ms": 224.01,
+          "p95_ms": 58.85
+        },
+        "checkout_order": {
+          "count": 20,
+          "success": 0,
+          "errors": 20,
+          "avg_ms": 18.06,
+          "p95_ms": 2.95
+        },
+        "customer_orders": {
+          "count": 30,
+          "success": 30,
+          "errors": 0,
+          "avg_ms": 36.62,
+          "p95_ms": 15.24
+        },
+        "product_details": {
+          "count": 50,
+          "success": 50,
+          "errors": 0,
+          "avg_ms": 17.22,
+          "p95_ms": 23.81
+        }
+      }
+    },
+    {
+      "concurrency": 50,
+      "total_requests": 800,
+      "successful_requests": 700,
+      "failed_requests": 100,
+      "error_rate_pct": 12.5,
+      "duration_sec": 10.92,
+      "requests_per_sec": 73.23,
+      "latency_stats_ms": {
+        "avg": 428.79,
+        "median_p50": 188.1,
+        "p95": 2027.47,
+        "p99": 6350.37,
+        "min": 4.35,
+        "max": 7545.73
+      },
+      "scenario_breakdown": {
+        "admin_dashboard": {
+          "count": 50,
+          "success": 50,
+          "errors": 0,
+          "avg_ms": 152.87,
+          "p95_ms": 23.05
+        },
+        "browse_catalog": {
+          "count": 250,
+          "success": 250,
+          "errors": 0,
+          "avg_ms": 1029.47,
+          "p95_ms": 274.13
+        },
+        "checkout_order": {
+          "count": 100,
+          "success": 0,
+          "errors": 100,
+          "avg_ms": 110.03,
+          "p95_ms": 9.25
+        },
+        "customer_orders": {
+          "count": 150,
+          "success": 150,
+          "errors": 0,
+          "avg_ms": 189.42,
+          "p95_ms": 36.16
+        },
+        "product_details": {
+          "count": 250,
+          "success": 250,
+          "errors": 0,
+          "avg_ms": 154.42,
+          "p95_ms": 40.49
+        }
+      }
+    },
+    {
+      "concurrency": 100,
+      "total_requests": 1180,
+      "successful_requests": 180,
+      "failed_requests": 1000,
+      "error_rate_pct": 84.75,
+      "duration_sec": 156.69,
+      "requests_per_sec": 7.53,
+      "latency_stats_ms": {
+        "avg": 9214.24,
+        "median_p50": 10037.43,
+        "p95": 10126.65,
+        "p99": 13228.74,
+        "min": 134.96,
+        "max": 14758.51
+      },
+      "scenario_breakdown": {
+        "admin_dashboard": {
+          "count": 80,
+          "success": 0,
+          "errors": 80,
+          "avg_ms": 10041.67,
+          "p95_ms": 10008.73
+        },
+        "browse_catalog": {
+          "count": 400,
+          "success": 100,
+          "errors": 300,
+          "avg_ms": 9509.46,
+          "p95_ms": 10005.71
+        },
+        "checkout_order": {
+          "count": 100,
+          "success": 0,
+          "errors": 100,
+          "avg_ms": 10041.46,
+          "p95_ms": 10021.96
+        },
+        "customer_orders": {
+          "count": 200,
+          "success": 0,
+          "errors": 200,
+          "avg_ms": 10038.05,
+          "p95_ms": 10056.54
+        },
+        "product_details": {
+          "count": 400,
+          "success": 80,
+          "errors": 320,
+          "avg_ms": 8134.83,
+          "p95_ms": 10014.09
+        }
+      }
+    }
+  ]
+}
