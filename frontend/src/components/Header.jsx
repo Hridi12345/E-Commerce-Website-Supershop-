@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   ShoppingBag, Search, ShoppingCart, Heart, User, MapPin, 
-  Phone, Clock, ChevronDown, ShieldCheck, Truck, Sparkles, LogOut, CheckCircle,
-  Menu, X, Home, Grid, Zap
+  Phone, ChevronDown, ShieldCheck, Truck, Sparkles, LogOut,
+  Menu, X, Home, Grid, Zap, ChevronLeft, ChevronRight, HelpCircle, Info
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { api } from '../api';
 
 export default function Header({ onNavigate, currentPage, currentParam }) {
   const { user, logout } = useAuth();
-  const { totalItemCount, subtotal, setIsMiniCartOpen } = useCart();
+  const { totalItemCount, setIsMiniCartOpen } = useCart();
+  const { wishlistCount } = useWishlist();
 
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,12 +20,43 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [isCatHovered, setIsCatHovered] = useState(false);
+
   const searchRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const categoryScrollRef = useRef(null);
 
   useEffect(() => {
     api.getCategories().then(cats => setCategories(cats || [])).catch(() => {});
   }, []);
+
+  // Category Auto-Slider: automatically scrolls categories smoothly every 3.5 seconds, pauses on hover
+  useEffect(() => {
+    if (isCatHovered || categories.length === 0) return;
+    const interval = setInterval(() => {
+      if (categoryScrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = categoryScrollRef.current;
+        if (scrollLeft + clientWidth >= scrollWidth - 15) {
+          categoryScrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          categoryScrollRef.current.scrollBy({ left: 180, behavior: 'smooth' });
+        }
+      }
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [isCatHovered, categories]);
+
+  const handleScrollCatLeft = () => {
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollCatRight = () => {
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.scrollBy({ left: 220, behavior: 'smooth' });
+    }
+  };
 
   // Live search autocomplete
   useEffect(() => {
@@ -43,7 +76,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
     }
   }, [searchQuery]);
 
-  // Click outside to close search
+  // Click outside to close search and user menu
   useEffect(() => {
     function handleClickOutside(e) {
       if (
@@ -72,33 +105,38 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
-        {/* Top Banner Notice */}
-        <div className="bg-emerald-700 text-white text-xs py-1.5 px-3 sm:px-4 font-medium">
-          <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs w-full">
+        {/* Top Banner Notice - Full Width */}
+        <div className="bg-emerald-700 text-white text-xs py-1.5 px-4 sm:px-6 lg:px-8 font-medium w-full">
+          <div className="w-full flex justify-between items-center gap-2">
             <div className="flex items-center gap-2 truncate">
-              <span className="bg-amber-400 text-emerald-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full uppercase tracking-wider shrink-0">Fast</span>
+              <span className="bg-amber-400 text-emerald-950 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0">
+                Fast
+              </span>
               <span className="truncate text-[11px] sm:text-xs">⚡ 60-Minute Doorstep Delivery Across Dhaka</span>
             </div>
-            <div className="flex items-center gap-3 text-emerald-100 shrink-0 text-[11px] sm:text-xs">
-              <span className="hidden md:flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> +880 9610-SUSHOP</span>
-              <button onClick={() => onNavigate('locator')} className="hover:text-white hidden sm:flex items-center gap-1 cursor-pointer">
-                <MapPin className="w-3.5 h-3.5" /> Store Locator
+            <div className="flex items-center gap-4 text-emerald-100 shrink-0 text-[11px] sm:text-xs">
+              <span className="hidden md:flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-emerald-300" /> +880 9610-SUSHOP
+              </span>
+              <button 
+                onClick={() => onNavigate('locator')} 
+                className="hover:text-white flex items-center gap-1.5 cursor-pointer font-medium transition-colors"
+              >
+                <MapPin className="w-3.5 h-3.5 text-emerald-300" /> Store Locator
               </button>
-              <span className="hidden sm:inline">|</span>
-              <span className="font-bold">BDT (৳)</span>
             </div>
           </div>
         </div>
 
-        {/* Main Header Container */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
-          <div className="flex items-center justify-between gap-2 sm:gap-4">
+        {/* Main Header Container - Full Width */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 border-b border-slate-100">
+          <div className="flex items-center justify-between gap-3 sm:gap-6 w-full">
             {/* Mobile Hamburger + Logo */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setMobileDrawerOpen(true)}
-                className="md:hidden p-1.5 rounded-xl text-slate-700 hover:bg-slate-100 cursor-pointer"
+                className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 cursor-pointer"
                 aria-label="Open Navigation Menu"
               >
                 <Menu className="w-6 h-6" />
@@ -106,17 +144,20 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
               <div 
                 onClick={() => onNavigate('home')} 
-                className="flex items-center gap-2 cursor-pointer select-none group"
+                className="flex items-center gap-2.5 cursor-pointer select-none group"
               >
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-200 group-hover:scale-105 transition-transform shrink-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-emerald-600 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform shrink-0">
                   <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">SU<span className="text-emerald-600">SHOP</span></span>
-                    <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1 py-0.2 rounded-full hidden sm:inline">SUPERSHOP</span>
+                  <div className="flex items-center">
+                    <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
+                      Su<span className="text-emerald-600">Shop</span>
+                    </span>
                   </div>
-                  <p className="text-[9px] sm:text-[10px] text-slate-500 font-medium hidden lg:block -mt-0.5">Everyday Essentials Delivered</p>
+                  <p className="text-[10px] text-slate-500 font-medium hidden sm:block mt-0.5">
+                    Everyday Essentials Delivered
+                  </p>
                 </div>
               </div>
             </div>
@@ -130,12 +171,12 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
-                  className="w-full bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-slate-900 pl-11 pr-24 py-2.5 rounded-full border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-sm transition-all"
+                  className="w-full bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-slate-900 pl-10 pr-24 py-2.5 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-sm transition-all"
                 />
-                <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3" />
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                 <button
                   type="submit"
-                  className="absolute right-1.5 top-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-1.5 rounded-full transition-colors cursor-pointer shadow-xs"
+                  className="absolute right-1.5 top-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-1.5 rounded-md transition-colors cursor-pointer shadow-xs"
                 >
                   Search
                 </button>
@@ -143,7 +184,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
               {/* Autocomplete Dropdown (Desktop) */}
               {showSearchDropdown && searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
+                <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden z-50">
                   <div className="p-2 border-b border-slate-100 text-xs text-slate-500 font-semibold px-4">
                     Suggested Products ({searchResults.length})
                   </div>
@@ -160,7 +201,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                         <img 
                           src={prod.thumbnail || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=100'} 
                           alt={prod.name}
-                          className="w-12 h-12 rounded-lg object-cover bg-slate-100 shrink-0" 
+                          className="w-10 h-10 rounded-md object-cover bg-slate-100 shrink-0" 
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-semibold text-slate-900 truncate">{prod.name}</h4>
@@ -185,47 +226,64 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
               )}
             </div>
 
-            {/* Right Action Icons: User Account, Wishlist & Cart */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              {/* User Account Button (Desktop explicit / Mobile icon) */}
+            {/* Right Action Bar: Wishlist, Cart, and Login Button at Far Right */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {/* Wishlist Button - Consistent Icon & Count Badge Pattern */}
+              <button
+                onClick={() => {
+                  if (!user) {
+                    onNavigate('login');
+                  } else {
+                    onNavigate('portal', { tab: 'wishlist' });
+                  }
+                }}
+                className="p-2 sm:p-2.5 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-700 hover:text-emerald-700 relative transition-all cursor-pointer shadow-xs flex items-center justify-center"
+                title="My Wishlist"
+              >
+                <Heart className="w-5 h-5 text-slate-700" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Cart Button - Similar Icon & Count Badge Pattern, No Price Display */}
+              <button
+                onClick={() => setIsMiniCartOpen(true)}
+                className="p-2 sm:p-2.5 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-700 hover:text-emerald-700 relative transition-all cursor-pointer shadow-xs flex items-center justify-center"
+                title="My Cart"
+              >
+                <ShoppingCart className="w-5 h-5 text-slate-700" />
+                {totalItemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-emerald-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs animate-pulse">
+                    {totalItemCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Login Button positioned at far right (or User Menu if logged in) */}
               {!user ? (
-                <>
-                  <div className="hidden md:flex items-center gap-1.5">
-                    <button
-                      onClick={() => onNavigate('login')}
-                      className="text-xs font-bold text-slate-700 hover:text-emerald-700 px-3 py-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={() => onNavigate('register')}
-                      className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition-colors cursor-pointer"
-                    >
-                      Register
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => onNavigate('login')}
-                    className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 cursor-pointer"
-                    title="Sign In"
-                  >
-                    <User className="w-5 h-5" />
-                  </button>
-                </>
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg shadow-xs transition-colors cursor-pointer whitespace-nowrap ml-1"
+                >
+                  Login
+                </button>
               ) : (
-                <div className="relative">
+                <div className="relative ml-1">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-xl hover:bg-slate-100 text-slate-700 transition-colors cursor-pointer"
+                    className="flex items-center gap-2 p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors cursor-pointer border border-slate-200"
                   >
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs sm:text-sm shrink-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
                       {user.name.charAt(0)}
                     </div>
                     <div className="hidden lg:block text-left">
                       <div className="text-xs font-semibold text-slate-900 leading-tight">
                         {user.name.split(' ')[0]}
                       </div>
-                      <div className="text-[10px] text-slate-500 capitalize">
+                      <div className="text-[10px] text-slate-500">
                         My Account
                       </div>
                     </div>
@@ -233,7 +291,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-lg shadow-xl border border-slate-200 p-2 z-50">
                       <div className="p-3 border-b border-slate-100 mb-1">
                         <p className="text-xs font-bold text-slate-900">{user.name}</p>
                         <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
@@ -241,45 +299,33 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
                       <button
                         onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'overview' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-md flex items-center gap-2 cursor-pointer"
                       >
-                        <User className="w-4 h-4 text-emerald-600" /> Personal Dashboard
+                        <User className="w-4 h-4 text-emerald-600" /> My Profile
                       </button>
                       <button
                         onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'orders' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-md flex items-center gap-2 cursor-pointer"
                       >
-                        <ShoppingBag className="w-4 h-4 text-slate-400" /> Order History & Invoices
-                      </button>
-                      <button
-                        onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'coupons' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
-                      >
-                        <Sparkles className="w-4 h-4 text-amber-500" /> My Coupons & Offers
+                        <ShoppingBag className="w-4 h-4 text-slate-500" /> Order Tracking & History
                       </button>
                       <button
                         onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'wishlist' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-md flex items-center gap-2 cursor-pointer"
                       >
-                        <Heart className="w-4 h-4 text-slate-400" /> My Wishlist
+                        <Heart className="w-4 h-4 text-slate-500" /> My Wishlist
                       </button>
                       <button
                         onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'addresses' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-md flex items-center gap-2 cursor-pointer"
                       >
-                        <MapPin className="w-4 h-4 text-slate-400" /> Saved Addresses
-                      </button>
-                      <button
-                        onClick={() => { setUserMenuOpen(false); onNavigate('portal', { tab: 'tickets' }); }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-emerald-50 rounded-lg flex items-center gap-2 cursor-pointer"
-                      >
-                        <ShieldCheck className="w-4 h-4 text-slate-400" /> Support Tickets
+                        <MapPin className="w-4 h-4 text-slate-500" /> Saved Addresses
                       </button>
 
                       <div className="mt-2 pt-2 border-t border-slate-100">
                         <button
                           onClick={() => { logout(); setUserMenuOpen(false); onNavigate('home'); }}
-                          className="w-full text-left px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-2 cursor-pointer"
+                          className="w-full text-left px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-md flex items-center gap-2 cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" /> Sign Out
                         </button>
@@ -288,34 +334,6 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                   )}
                 </div>
               )}
-
-              {/* Wishlist Button */}
-              <button
-                onClick={() => onNavigate('portal', { tab: 'wishlist' })}
-                className="p-2 rounded-xl hover:bg-slate-100 text-slate-700 relative transition-colors cursor-pointer hidden sm:block"
-                title="My Wishlist"
-              >
-                <Heart className="w-5 h-5" />
-              </button>
-
-              {/* Cart Button */}
-              <button
-                onClick={() => setIsMiniCartOpen(true)}
-                className="flex items-center gap-1.5 sm:gap-2.5 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-900 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl transition-all cursor-pointer relative shadow-xs"
-              >
-                <div className="relative">
-                  <ShoppingCart className="w-5 h-5 text-emerald-700" />
-                  {totalItemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
-                      {totalItemCount}
-                    </span>
-                  )}
-                </div>
-                <div className="hidden sm:block text-left text-xs">
-                  <div className="text-[10px] text-emerald-700 font-semibold uppercase leading-tight">My Cart</div>
-                  <div className="font-extrabold text-emerald-950">৳{subtotal.toFixed(0)}</div>
-                </div>
-              </button>
             </div>
           </div>
 
@@ -324,16 +342,16 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
-                placeholder="Search groceries, fruits, milk, essentials..."
+                placeholder="Search groceries, fruits, essentials..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchResults.length > 0 && setShowSearchDropdown(true)}
-                className="w-full bg-slate-100 hover:bg-slate-100/90 focus:bg-white text-slate-900 pl-10 pr-20 py-2 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-xs transition-all"
+                className="w-full bg-slate-100 hover:bg-slate-100/90 focus:bg-white text-slate-900 pl-9 pr-20 py-2 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs transition-all"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <button
                 type="submit"
-                className="absolute right-1 top-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-3 py-1 rounded-lg transition-colors cursor-pointer"
+                className="absolute right-1 top-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1 rounded-md transition-colors cursor-pointer"
               >
                 Search
               </button>
@@ -341,7 +359,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
             {/* Mobile Autocomplete Dropdown */}
             {showSearchDropdown && searchResults.length > 0 && (
-              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50">
+              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden z-50">
                 <div className="p-2 border-b border-slate-100 text-[11px] text-slate-500 font-semibold px-3">
                   Suggested Products ({searchResults.length})
                 </div>
@@ -358,7 +376,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                       <img 
                         src={prod.thumbnail || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=100'} 
                         alt={prod.name}
-                        className="w-10 h-10 rounded-lg object-cover bg-slate-100 shrink-0" 
+                        className="w-9 h-9 rounded-md object-cover bg-slate-100 shrink-0" 
                       />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-semibold text-slate-900 truncate">{prod.name}</h4>
@@ -381,59 +399,110 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
               </div>
             )}
           </div>
+        </div>
 
-          {/* Secondary Category Navigation Bar */}
-          <div className="flex items-center justify-between gap-4 pt-2.5 border-t border-slate-100 mt-2 text-xs font-semibold text-slate-600">
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 w-full md:w-auto">
-              <button
-                onClick={() => onNavigate('home')}
-                className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors cursor-pointer text-xs ${
-                  currentPage === 'home' ? 'bg-emerald-600 text-white' : 'hover:bg-slate-100 text-slate-700'
-                }`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => onNavigate('plp')}
-                className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors cursor-pointer text-xs ${
-                  currentPage === 'plp' && !currentParam?.category_id && !currentParam?.is_flash_sale ? 'bg-emerald-600 text-white' : 'hover:bg-slate-100 text-slate-700'
-                }`}
-              >
-                All Catalog
-              </button>
-              <button
-                onClick={() => onNavigate('plp', { is_flash_sale: true })}
-                className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors flex items-center gap-1 cursor-pointer text-xs text-amber-600 hover:bg-amber-50 ${
-                  currentParam?.is_flash_sale ? 'bg-amber-500 text-white hover:text-white' : ''
-                }`}
-              >
-                <Sparkles className="w-3.5 h-3.5" /> Flash Sales
-              </button>
-              {categories.slice(0, 6).map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => onNavigate('plp', { category_id: cat.id })}
-                  className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors cursor-pointer text-xs ${
-                    currentParam?.category_id === cat.id ? 'bg-emerald-600 text-white' : 'hover:bg-slate-100 text-slate-700'
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
-              <button
-                onClick={() => onNavigate('faq')}
-                className="px-3 py-1.5 rounded-lg whitespace-nowrap hover:bg-slate-100 text-slate-700 cursor-pointer text-xs"
-              >
-                FAQ Hub
-              </button>
-            </div>
+        {/* 11. Header Navigation Menu Bar - Essential Menu Items */}
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-2 bg-slate-50/80 border-b border-slate-200/80 hidden sm:flex items-center justify-between text-xs font-semibold text-slate-700">
+          <nav className="flex items-center gap-1 sm:gap-2">
+            <button
+              onClick={() => onNavigate('home')}
+              className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                currentPage === 'home' ? 'bg-emerald-600 text-white font-bold' : 'hover:bg-slate-200/70 text-slate-800'
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => onNavigate('plp')}
+              className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                currentPage === 'plp' && !currentParam?.category_id && !currentParam?.is_flash_sale
+                  ? 'bg-emerald-600 text-white font-bold'
+                  : 'hover:bg-slate-200/70 text-slate-800'
+              }`}
+            >
+              Products
+            </button>
+            <button
+              onClick={() => onNavigate('plp', { is_flash_sale: true })}
+              className={`px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer text-amber-700 hover:bg-amber-100/60 font-bold ${
+                currentParam?.is_flash_sale ? 'bg-amber-500 text-white hover:text-white' : ''
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Flash Sales
+            </button>
+            <button
+              onClick={() => onNavigate('page', { slug: 'about-us' })}
+              className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                currentPage === 'page' && currentParam?.slug === 'about-us'
+                  ? 'bg-emerald-600 text-white font-bold'
+                  : 'hover:bg-slate-200/70 text-slate-800'
+              }`}
+            >
+              About Us
+            </button>
+            <button
+              onClick={() => onNavigate('faq')}
+              className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                currentPage === 'faq' ? 'bg-emerald-600 text-white font-bold' : 'hover:bg-slate-200/70 text-slate-800'
+              }`}
+            >
+              Contact Us & FAQ
+            </button>
+          </nav>
 
-            <div className="hidden md:flex items-center gap-3 text-slate-500 text-xs shrink-0">
-              <span className="flex items-center gap-1 text-emerald-700 font-medium">
-                <Truck className="w-3.5 h-3.5" /> Free Delivery above ৳1,000
-              </span>
-            </div>
+          <div className="flex items-center gap-3 text-slate-600 font-medium">
+            <span className="flex items-center gap-1.5 text-emerald-700 font-bold">
+              <Truck className="w-3.5 h-3.5" /> Free Express Delivery above ৳1,000
+            </span>
           </div>
+        </div>
+
+        {/* 6. Automatic Category Navigation Carousel / Slider - No Manual Drag Required */}
+        <div 
+          className="w-full px-4 sm:px-6 lg:px-8 py-2 bg-white flex items-center gap-2 border-b border-slate-100"
+          onMouseEnter={() => setIsCatHovered(true)}
+          onMouseLeave={() => setIsCatHovered(false)}
+        >
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0 hidden md:inline">
+            Aisles:
+          </span>
+
+          <button
+            onClick={handleScrollCatLeft}
+            className="p-1 rounded-md text-slate-400 hover:text-slate-800 hover:bg-slate-100 cursor-pointer transition-colors shrink-0"
+            title="Slide Left"
+            aria-label="Previous Categories"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          <div
+            ref={categoryScrollRef}
+            className="flex items-center gap-2 overflow-x-hidden py-0.5 scroll-smooth w-full select-none"
+          >
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => onNavigate('plp', { category_id: cat.id })}
+                className={`px-3 py-1 rounded-md text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                  currentParam?.category_id === cat.id
+                    ? 'bg-emerald-600 text-white font-bold shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/60'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleScrollCatRight}
+            className="p-1 rounded-md text-slate-400 hover:text-slate-800 hover:bg-slate-100 cursor-pointer transition-colors shrink-0"
+            title="Slide Right"
+            aria-label="Next Categories"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </header>
 
@@ -450,11 +519,13 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
             {/* Drawer Header */}
             <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-emerald-700 text-white">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-white text-emerald-700 flex items-center justify-center font-black">
+                <div className="w-8 h-8 rounded-lg bg-white text-emerald-700 flex items-center justify-center font-black">
                   <ShoppingBag className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black tracking-tight leading-none">SU<span className="text-amber-300">SHOP</span></h3>
+                  <h3 className="text-base font-black tracking-tight leading-none">
+                    Su<span className="text-amber-300">Shop</span>
+                  </h3>
                   <p className="text-[10px] text-emerald-100">Everyday Essentials</p>
                 </div>
               </div>
@@ -471,7 +542,7 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
               {user ? (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
                       {user.name.charAt(0)}
                     </div>
                     <div>
@@ -483,26 +554,18 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
                     onClick={() => navigateAndCloseDrawer('portal', { tab: 'overview' })}
                     className="text-[11px] font-bold text-emerald-700 hover:underline"
                   >
-                    View Account →
+                    Profile →
                   </button>
                 </div>
               ) : (
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-slate-700">Welcome to SuShop</p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => navigateAndCloseDrawer('login')}
-                      className="flex-1 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-lg text-center cursor-pointer"
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={() => navigateAndCloseDrawer('register')}
-                      className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg text-center cursor-pointer"
-                    >
-                      Register
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => navigateAndCloseDrawer('login')}
+                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg text-center cursor-pointer shadow-xs"
+                  >
+                    Login to Your Account
+                  </button>
                 </div>
               )}
             </div>
@@ -511,40 +574,56 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
             <div className="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
               <button
                 onClick={() => navigateAndCloseDrawer('home')}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
               >
                 <Home className="w-4 h-4 text-emerald-600" />
-                <span>Home Storefront</span>
+                <span>Home</span>
               </button>
 
               <button
                 onClick={() => navigateAndCloseDrawer('plp')}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
               >
                 <Grid className="w-4 h-4 text-emerald-600" />
-                <span>All Catalog Products</span>
+                <span>Products Catalog</span>
               </button>
 
               <button
                 onClick={() => navigateAndCloseDrawer('plp', { is_flash_sale: true })}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-amber-50 text-amber-900 font-bold cursor-pointer"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-amber-50 text-amber-900 font-bold cursor-pointer"
               >
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-4 h-4 text-amber-500" />
                   <span>⚡ Flash Deals</span>
                 </div>
-                <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-black">SALE</span>
+                <span className="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-md font-bold">SALE</span>
+              </button>
+
+              <button
+                onClick={() => navigateAndCloseDrawer('page', { slug: 'about-us' })}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
+              >
+                <Info className="w-4 h-4 text-emerald-600" />
+                <span>About Us</span>
+              </button>
+
+              <button
+                onClick={() => navigateAndCloseDrawer('faq')}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 text-slate-800 font-semibold cursor-pointer"
+              >
+                <HelpCircle className="w-4 h-4 text-emerald-600" />
+                <span>Contact Us & FAQ</span>
               </button>
 
               <div className="pt-2 pb-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3">Popular Aisles</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3">Departments / Aisles</p>
               </div>
 
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => navigateAndCloseDrawer('plp', { category_id: cat.id })}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 cursor-pointer text-xs"
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 cursor-pointer text-xs"
                 >
                   <span>{cat.name}</span>
                   <span className="text-[11px] text-slate-400">→</span>
@@ -552,23 +631,15 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
               ))}
 
               <div className="pt-3 pb-1 border-t border-slate-100 mt-2">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3">Help & Services</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3">Store Locations</p>
               </div>
 
               <button
                 onClick={() => navigateAndCloseDrawer('locator')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer"
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 cursor-pointer"
               >
                 <MapPin className="w-4 h-4 text-slate-400" />
                 <span>Store & Hub Locator</span>
-              </button>
-
-              <button
-                onClick={() => navigateAndCloseDrawer('faq')}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 text-slate-700 cursor-pointer"
-              >
-                <ShieldCheck className="w-4 h-4 text-slate-400" />
-                <span>Customer FAQ Hub</span>
               </button>
             </div>
 
@@ -584,10 +655,10 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
       )}
 
       {/* Sticky Bottom Navigation Bar on Mobile Devices */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex items-center justify-around md:hidden shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-3 flex items-center justify-around md:hidden shadow-lg">
         <button
           onClick={() => onNavigate('home')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
+          className={`flex flex-col items-center gap-0.5 p-1 rounded-md cursor-pointer ${
             currentPage === 'home' ? 'text-emerald-600 font-bold' : 'text-slate-500'
           }`}
         >
@@ -597,17 +668,17 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
 
         <button
           onClick={() => onNavigate('plp')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
+          className={`flex flex-col items-center gap-0.5 p-1 rounded-md cursor-pointer ${
             currentPage === 'plp' && !currentParam?.is_flash_sale ? 'text-emerald-600 font-bold' : 'text-slate-500'
           }`}
         >
           <Grid className="w-5 h-5" />
-          <span className="text-[10px]">Catalog</span>
+          <span className="text-[10px]">Products</span>
         </button>
 
         <button
           onClick={() => onNavigate('plp', { is_flash_sale: true })}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
+          className={`flex flex-col items-center gap-0.5 p-1 rounded-md cursor-pointer ${
             currentParam?.is_flash_sale ? 'text-amber-500 font-bold' : 'text-slate-500'
           }`}
         >
@@ -616,21 +687,34 @@ export default function Header({ onNavigate, currentPage, currentParam }) {
         </button>
 
         <button
-          onClick={() => onNavigate('portal', { tab: 'wishlist' })}
-          className="flex flex-col items-center gap-0.5 p-1 rounded-xl text-slate-500 cursor-pointer"
+          onClick={() => {
+            if (!user) {
+              onNavigate('login');
+            } else {
+              onNavigate('portal', { tab: 'wishlist' });
+            }
+          }}
+          className="flex flex-col items-center gap-0.5 p-1 rounded-md text-slate-500 relative cursor-pointer"
         >
-          <Heart className="w-5 h-5" />
+          <div className="relative">
+            <Heart className="w-5 h-5 text-slate-600" />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-rose-500 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
+          </div>
           <span className="text-[10px]">Wishlist</span>
         </button>
 
         <button
           onClick={() => setIsMiniCartOpen(true)}
-          className="flex flex-col items-center gap-0.5 p-1 rounded-xl text-slate-700 relative cursor-pointer"
+          className="flex flex-col items-center gap-0.5 p-1 rounded-md text-slate-700 relative cursor-pointer"
         >
           <div className="relative">
             <ShoppingCart className="w-5 h-5 text-emerald-600" />
             {totalItemCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 bg-emerald-600 text-white text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-2 bg-emerald-600 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                 {totalItemCount}
               </span>
             )}

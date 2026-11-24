@@ -6,10 +6,12 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { api } from '../../api';
 
 export default function ProductDetailPage({ productSlug, onNavigate, onQuickView }) {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const { user } = useAuth();
 
   const [product, setProduct] = useState(null);
@@ -54,7 +56,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
     return (
       <div className="max-w-3xl mx-auto py-20 px-4 text-center">
         <h2 className="text-xl font-bold text-slate-800">Product Not Found</h2>
-        <button onClick={() => onNavigate('plp')} className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold">
+        <button onClick={() => onNavigate('plp')} className="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-bold">
           Back to Catalog
         </button>
       </div>
@@ -168,7 +170,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
           </div>
 
           {/* Media Display Area */}
-          <div className="aspect-square rounded-3xl bg-slate-100 border border-slate-200 overflow-hidden relative shadow-xs flex items-center justify-center">
+          <div className="aspect-square rounded-lg bg-slate-100 border border-slate-200 overflow-hidden relative shadow-xs flex items-center justify-center">
             {activeMediaTab === 'images' && (
               <img
                 src={activeImage || product.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=700'}
@@ -205,7 +207,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
             {activeMediaTab === 'video' && (
               <div className="w-full h-full bg-slate-900 flex items-center justify-center p-4">
                 <iframe
-                  className="w-full h-full rounded-2xl"
+                  className="w-full h-full rounded-lg"
                   src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=0"
                   title="Product Video"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -222,7 +224,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
                 <button
                   key={i}
                   onClick={() => setActiveImage(img)}
-                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
+                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
                     activeImage === img ? 'border-emerald-600 scale-105 shadow-xs' : 'border-slate-200 opacity-70 hover:opacity-100'
                   }`}
                 >
@@ -263,7 +265,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
           </div>
 
           {/* Price & B2B Tiered Breaks */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200/80 space-y-2">
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-black text-slate-900">৳{currentPrice}</span>
               {product.sale_price && (
@@ -296,17 +298,17 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
           {/* Dynamic Stock Indicator */}
           <div>
             {currentStock <= 0 ? (
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-800 bg-amber-50 border border-amber-200 p-2.5 rounded-lg">
                 <AlertTriangle className="w-4 h-4 text-amber-600" />
                 <span>Backorder / Pre-order Available (Dispatched within 48 Hours)</span>
               </div>
             ) : currentStock <= 5 ? (
-              <div className="flex items-center gap-2 text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 p-2.5 rounded-xl animate-pulse">
+              <div className="flex items-center gap-2 text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 p-2.5 rounded-lg animate-pulse">
                 <AlertTriangle className="w-4 h-4 text-rose-600" />
                 <span>Only {currentStock} left in stock - order soon!</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 p-2.5 rounded-lg">
                 <CheckCircle className="w-4 h-4 text-emerald-600" />
                 <span>In Stock - Guaranteed 60-Minute Delivery across Dhaka</span>
               </div>
@@ -324,7 +326,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
                   <button
                     key={v.id}
                     onClick={() => setSelectedVariant(v)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                    className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
                       selectedVariant?.id === v.id
                         ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
                         : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-400'
@@ -340,7 +342,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
 
           {/* Quantity & CTA */}
           <div className="flex items-center gap-3 pt-2">
-            <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50">
+            <div className="flex items-center border border-slate-200 rounded-lg bg-slate-50">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="px-3.5 py-3 text-slate-600 hover:bg-slate-200 rounded-l-xl text-sm font-bold transition-colors cursor-pointer"
@@ -358,10 +360,22 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
 
             <button
               onClick={handleAddToCart}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
             >
               <ShoppingCart className="w-4 h-4" />
-              <span>Add to Basket</span>
+              <span>Add to Cart</span>
+            </button>
+
+            <button
+              onClick={() => toggleWishlist(product)}
+              className={`p-3 rounded-lg border transition-all cursor-pointer shadow-xs ${
+                isInWishlist(product.id)
+                  ? 'bg-rose-50 border-rose-200 text-rose-600'
+                  : 'bg-white border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50'
+              }`}
+              title={isInWishlist(product.id) ? "Remove from Wishlist" : "Add to Wishlist"}
+            >
+              <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current text-rose-500' : ''}`} />
             </button>
           </div>
 
@@ -383,7 +397,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
 
       {/* Cross-Sell Engine: Frequently Bought Together Bundle */}
       {product.cross_sells && product.cross_sells.length > 0 && (
-        <section className="bg-emerald-50/70 border border-emerald-200 rounded-3xl p-6">
+        <section className="bg-emerald-50/70 border border-emerald-200 rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-emerald-600" />
             <h3 className="text-base font-black text-slate-900">Frequently Bought Together Bundle</h3>
@@ -391,11 +405,11 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
 
           <div className="flex flex-wrap items-center gap-4">
             {/* Primary Product */}
-            <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center gap-3">
+            <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3">
               <img
                 src={product.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=100'}
                 alt={product.name}
-                className="w-14 h-14 rounded-xl object-cover"
+                className="w-14 h-14 rounded-lg object-cover"
               />
               <div>
                 <p className="text-xs font-bold text-slate-900 line-clamp-1">{product.name}</p>
@@ -406,11 +420,11 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
             <span className="text-lg font-black text-emerald-600">+</span>
 
             {/* Cross Sell Partner Product */}
-            <div className="bg-white p-3 rounded-2xl border border-slate-200 flex items-center gap-3">
+            <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3">
               <img
                 src={product.cross_sells[0].image || 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=100'}
                 alt={product.cross_sells[0].name}
-                className="w-14 h-14 rounded-xl object-cover"
+                className="w-14 h-14 rounded-lg object-cover"
               />
               <div>
                 <p className="text-xs font-bold text-slate-900 line-clamp-1">{product.cross_sells[0].name}</p>
@@ -430,7 +444,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
               </div>
               <button
                 onClick={handleAddBundleToCart}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors cursor-pointer shadow-xs"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors cursor-pointer shadow-xs"
               >
                 Add Both to Basket
               </button>
@@ -451,7 +465,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
 
         <div>
           <h3 className="text-lg font-black text-slate-900 mb-3">Technical Specifications</h3>
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden text-xs">
+          <div className="bg-white rounded-lg border border-slate-200 overflow-hidden text-xs">
             {Object.entries(product.technical_specs || {}).map(([key, val], idx) => (
               <div key={key} className={`flex justify-between p-3 ${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}`}>
                 <span className="font-semibold text-slate-600">{key}</span>
@@ -486,7 +500,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {product.reviews && product.reviews.length > 0 ? (
             product.reviews.map((r) => (
-              <div key={r.id} className="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+              <div key={r.id} className="bg-white p-4 rounded-lg border border-slate-200 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-slate-900">{r.customer_name}</span>
@@ -513,7 +527,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
         </div>
 
         {/* Add Review Form */}
-        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 max-w-xl">
+        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200 max-w-xl">
           <h4 className="text-xs font-black uppercase tracking-wider text-slate-800 mb-2">Write a Review</h4>
           <form onSubmit={handleSubmitReview} className="space-y-3">
             <div className="flex items-center gap-2">
@@ -533,19 +547,19 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
               placeholder="Headline / Summary (Optional)"
               value={reviewTitle}
               onChange={(e) => setReviewTitle(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
+              className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
             />
             <textarea
               placeholder="Write your detailed review about product freshness, packaging, or delivery..."
               value={reviewComment}
               onChange={(e) => setReviewComment(e.target.value)}
               rows={3}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
+              className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
             />
             <button
               type="submit"
               disabled={submittingReview || !reviewComment.trim()}
-              className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
             >
               {submittingReview ? 'Submitting...' : 'Post Customer Review'}
             </button>
@@ -558,7 +572,7 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
           <div className="space-y-3 mb-4">
             {product.qas && product.qas.length > 0 ? (
               product.qas.map((qa) => (
-                <div key={qa.id} className="bg-white p-3.5 rounded-xl border border-slate-200 text-xs space-y-1.5">
+                <div key={qa.id} className="bg-white p-3.5 rounded-lg border border-slate-200 text-xs space-y-1.5">
                   <p className="font-bold text-slate-900">Q: {qa.question}</p>
                   <p className="text-slate-600 pl-4 border-l-2 border-emerald-500">
                     A: {qa.answer || <span className="italic text-slate-400">Awaiting answer from SuShop specialists.</span>}
@@ -576,12 +590,12 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
               placeholder="Ask a question about this product..."
               value={newQuestion}
               onChange={(e) => setNewQuestion(e.target.value)}
-              className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
+              className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-emerald-500 font-medium"
             />
             <button
               type="submit"
               disabled={submittingQA || !newQuestion.trim()}
-              className="bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
+              className="bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <Send className="w-3.5 h-3.5" /> Ask
             </button>
@@ -598,12 +612,12 @@ export default function ProductDetailPage({ productSlug, onNavigate, onQuickView
               <div
                 key={u.id}
                 onClick={() => onNavigate('pdp', { slug: u.slug })}
-                className="bg-white p-3 rounded-2xl border border-slate-200 hover:border-emerald-400 transition-all cursor-pointer group"
+                className="bg-white p-3 rounded-lg border border-slate-200 hover:border-emerald-400 transition-all cursor-pointer group"
               >
                 <img
                   src={u.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200'}
                   alt={u.name}
-                  className="w-full aspect-square rounded-xl object-cover mb-2 group-hover:scale-105 transition-transform"
+                  className="w-full aspect-square rounded-lg object-cover mb-2 group-hover:scale-105 transition-transform"
                 />
                 <h4 className="text-xs font-bold text-slate-900 line-clamp-1 group-hover:text-emerald-700">{u.name}</h4>
                 <p className="text-xs font-black text-slate-900 mt-1">৳{u.sale_price || u.base_price}</p>

@@ -53,7 +53,7 @@ export default function CheckoutPage({ onNavigate }) {
         <p className="text-xs text-slate-500 mt-1">Please add everyday items to checkout.</p>
         <button
           onClick={() => onNavigate('plp')}
-          className="mt-4 bg-emerald-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl cursor-pointer"
+          className="mt-4 bg-emerald-600 text-white text-xs font-bold px-5 py-2.5 rounded-lg cursor-pointer"
         >
           Browse Catalog
         </button>
@@ -110,9 +110,9 @@ export default function CheckoutPage({ onNavigate }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
       {orderSuccess ? (
-        <div className="max-w-xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-xl text-center space-y-5 animate-in fade-in duration-300">
+        <div className="max-w-xl mx-auto bg-white rounded-lg p-8 border border-slate-200 shadow-xl text-center space-y-5 animate-in fade-in duration-300">
           <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-10 h-10" />
           </div>
@@ -126,7 +126,7 @@ export default function CheckoutPage({ onNavigate }) {
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-2xl p-4 text-xs text-left space-y-2 border border-slate-200">
+          <div className="bg-slate-50 rounded-lg p-4 text-xs text-left space-y-2 border border-slate-200">
             <div className="flex justify-between font-bold">
               <span className="text-slate-500">Order Number:</span>
               <span className="text-slate-900 font-mono text-sm">{orderSuccess.order_number}</span>
@@ -148,13 +148,13 @@ export default function CheckoutPage({ onNavigate }) {
           <div className="pt-2 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => onNavigate('portal', { tab: 'orders' })}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs transition-colors cursor-pointer"
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-xs transition-colors cursor-pointer"
             >
               Track in Customer Portal
             </button>
             <button
               onClick={() => onNavigate('home')}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-5 rounded-xl text-xs transition-colors cursor-pointer"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 px-5 rounded-lg text-xs transition-colors cursor-pointer"
             >
               Back to Home
             </button>
@@ -181,14 +181,14 @@ export default function CheckoutPage({ onNavigate }) {
             </div>
 
             {errorMsg && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium flex items-center gap-2">
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-700 font-medium flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             {/* 1. Contact Information */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-3">
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">1</span>
                 Contact Information
@@ -202,7 +202,7 @@ export default function CheckoutPage({ onNavigate }) {
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     placeholder="e.g. Tahmid Rahman"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium"
                   />
                 </div>
                 <div>
@@ -213,7 +213,7 @@ export default function CheckoutPage({ onNavigate }) {
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     placeholder="+8801XXXXXXXXX"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -224,14 +224,14 @@ export default function CheckoutPage({ onNavigate }) {
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     placeholder="tahmid@example.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium"
                   />
                 </div>
               </div>
             </div>
 
             {/* 2. Shipping Address & Location */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">2</span>
@@ -241,7 +241,7 @@ export default function CheckoutPage({ onNavigate }) {
 
               {/* Saved Address Selector */}
               {savedAddresses.length > 0 && (
-                <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-xl space-y-1.5 text-xs">
+                <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-lg space-y-1.5 text-xs">
                   <span className="font-bold text-emerald-900 text-[11px] block">Choose From Saved Addresses:</span>
                   <div className="flex flex-wrap gap-2">
                     {savedAddresses.map((addr) => (
@@ -281,7 +281,7 @@ export default function CheckoutPage({ onNavigate }) {
                       value={building}
                       onChange={(e) => setBuilding(e.target.value)}
                       placeholder="e.g. Flat 4B, Shanto Nibash, Holding 15"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium"
                     />
                   </div>
                   <div>
@@ -294,7 +294,7 @@ export default function CheckoutPage({ onNavigate }) {
                       value={street}
                       onChange={(e) => setStreet(e.target.value)}
                       placeholder="e.g. Road 11, Block D"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium"
                     />
                   </div>
                 </div>
@@ -306,7 +306,7 @@ export default function CheckoutPage({ onNavigate }) {
                       required
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-bold text-slate-800"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-bold text-slate-800"
                     >
                       <option value="" disabled>-- Select City / Area from Bangladesh --</option>
                       {BANGLADESH_CITIES.map((c) => (
@@ -320,7 +320,7 @@ export default function CheckoutPage({ onNavigate }) {
                       type="text"
                       disabled
                       value="Bangladesh"
-                      className="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 text-slate-500 font-semibold"
+                      className="w-full bg-slate-100 border border-slate-200 rounded-lg p-2.5 text-slate-500 font-semibold"
                     />
                   </div>
                 </div>
@@ -332,14 +332,14 @@ export default function CheckoutPage({ onNavigate }) {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="e.g. Please call when arriving at gate"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none focus:border-emerald-500 font-medium placeholder:text-slate-400 placeholder:italic"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 outline-none focus:border-emerald-500 font-medium placeholder:text-slate-400 placeholder:italic"
                   />
                 </div>
               </div>
             </div>
 
             {/* 3. Payment Gateway Options */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 space-y-3">
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[10px] flex items-center justify-center font-bold">3</span>
                 Select Payment Gateway
@@ -347,15 +347,15 @@ export default function CheckoutPage({ onNavigate }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { id: 'bkash', name: 'bKash Wallet', badge: '10% Cashback', desc: 'Instant mobile payment' },
-                  { id: 'nagad', name: 'Nagad Wallet', badge: 'Zero Fee', desc: 'Post office digital wallet' },
+                  { id: 'bkash', name: 'bKash Wallet', badge: '10% Cashback', desc: 'Instant mobile payment', logo: '/images/payments/bkash.png' },
+                  { id: 'nagad', name: 'Nagad Wallet', badge: 'Zero Fee', desc: 'Post office digital wallet', logo: '/images/payments/nagad.png' },
                   { id: 'card', name: 'Debit / Credit Card', badge: 'SSLCommerz', desc: 'Visa, Master, Amex' },
                   { id: 'cod', name: 'Cash on Delivery', badge: 'Popular', desc: 'Pay at your doorstep' },
                   { id: 'bnpl', name: 'Buy Now Pay Later', badge: '0% Interest', desc: 'Pay in 3 installments' }
                 ].map((gateway) => (
                   <label
                     key={gateway.id}
-                    className={`p-3.5 rounded-2xl border flex items-start gap-3 cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-lg border flex items-start gap-3 cursor-pointer transition-all ${
                       paymentMethod === gateway.id
                         ? 'border-emerald-600 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-500'
                         : 'border-slate-200 hover:border-slate-300 bg-white'
@@ -370,7 +370,12 @@ export default function CheckoutPage({ onNavigate }) {
                     />
                     <div className="flex-1 text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900">{gateway.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-900">{gateway.name}</span>
+                          {gateway.logo && (
+                            <img src={gateway.logo} alt={gateway.name} className="h-4 w-auto object-contain" />
+                          )}
+                        </div>
                         <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">
                           {gateway.badge}
                         </span>
@@ -385,7 +390,7 @@ export default function CheckoutPage({ onNavigate }) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-xl shadow-emerald-200 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-black py-4 rounded-lg shadow-xl shadow-emerald-200 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <span>{submitting ? 'Allocating Inventory & Placing Order...' : `Place Order (৳${totalAmount})`}</span>
               <ArrowRight className="w-4 h-4" />
@@ -394,7 +399,7 @@ export default function CheckoutPage({ onNavigate }) {
 
           {/* Order Summary Breakdown Sidebar */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4 sticky top-24">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs space-y-4 sticky top-24">
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">
                 Order Summary Breakdown ({items.length} items)
               </h3>
@@ -442,7 +447,7 @@ export default function CheckoutPage({ onNavigate }) {
                 </div>
               </div>
 
-              <div className="pt-2 text-[11px] text-slate-500 flex items-center gap-2 bg-emerald-50/50 p-3 rounded-xl border border-emerald-100">
+              <div className="pt-2 text-[11px] text-slate-500 flex items-center gap-2 bg-emerald-50/50 p-3 rounded-lg border border-emerald-100">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Inventory is held strictly upon placing this order to prevent overselling.</span>
               </div>

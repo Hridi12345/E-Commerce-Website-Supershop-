@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 import { api } from '../api';
 
 const CartContext = createContext();
 
-export function CartProvider({ children }) {
+export function CartProvider({ children, onNavigate }) {
+  const { user } = useAuth();
   const [items, setItems] = useState(() => {
     try {
       const saved = localStorage.getItem('doorbaz_cart');
@@ -32,7 +34,19 @@ export function CartProvider({ children }) {
     }
   }, [items, abandonmentNotice]);
 
-  const addToCart = (product, variant = null, quantity = 1) => {
+  const addToCart = (product, variant = null, quantity = 1, customRedirect = null) => {
+    if (!user) {
+      if (customRedirect) {
+        customRedirect();
+      } else if (onNavigate) {
+        onNavigate('login');
+      } else {
+        window.history.pushState({}, '', '/login');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+      return false;
+    }
+
     setItems(prev => {
       const variantId = variant ? variant.id : null;
       const sku = variant ? variant.sku : product.sku;

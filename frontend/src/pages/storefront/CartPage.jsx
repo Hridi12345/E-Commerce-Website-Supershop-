@@ -34,7 +34,7 @@ export default function CartPage({ onNavigate }) {
   if (items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl mx-auto flex items-center justify-center mb-4">
+        <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-lg mx-auto flex items-center justify-center mb-4">
           <ShoppingCart className="w-10 h-10" />
         </div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Your Shopping Cart is Empty</h2>
@@ -43,7 +43,7 @@ export default function CartPage({ onNavigate }) {
         </p>
         <button
           onClick={() => onNavigate && onNavigate('products')}
-          className="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md shadow-emerald-600/20 cursor-pointer transition-colors inline-flex items-center gap-2"
+          className="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-3 rounded-lg shadow-md shadow-emerald-600/20 cursor-pointer transition-colors inline-flex items-center gap-2"
         >
           <span>Start Shopping</span>
           <ArrowRight className="w-4 h-4" />
@@ -69,7 +69,7 @@ export default function CartPage({ onNavigate }) {
       </div>
 
       {/* Free Shipping Progress Bar */}
-      <div className="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-4 mb-6">
+      <div className="bg-emerald-50 border border-emerald-200/80 rounded-lg p-4 mb-6">
         <div className="flex items-center justify-between text-xs font-bold text-emerald-950 mb-1.5">
           <span className="flex items-center gap-1.5">
             <Truck className="w-4 h-4 text-emerald-600" />
@@ -90,7 +90,7 @@ export default function CartPage({ onNavigate }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items List */}
         <div className="lg:col-span-2 space-y-3">
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
               <span className="text-xs font-bold text-slate-700">Items ({items.length})</span>
               <button
@@ -107,7 +107,7 @@ export default function CartPage({ onNavigate }) {
                   <img
                     src={item.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=80'}
                     alt={item.name}
-                    className="w-16 h-16 object-cover rounded-xl border border-slate-100 shrink-0 bg-slate-50"
+                    className="w-16 h-16 object-cover rounded-lg border border-slate-100 shrink-0 bg-slate-50"
                   />
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-bold text-slate-900 truncate">{item.name}</h3>
@@ -118,7 +118,7 @@ export default function CartPage({ onNavigate }) {
                   </div>
 
                   {/* Quantity Stepper */}
-                  <div className="flex items-center gap-2 border border-slate-200 bg-slate-50 rounded-xl px-2 py-1">
+                  <div className="flex items-center gap-2 border border-slate-200 bg-slate-50 rounded-lg px-2 py-1">
                     <button
                       onClick={() => updateQuantity(item.product_id, item.variant_id, item.quantity - 1)}
                       className="text-slate-600 hover:text-slate-900 font-bold px-1.5 cursor-pointer text-xs"
@@ -153,7 +153,7 @@ export default function CartPage({ onNavigate }) {
 
         {/* Order Summary Sidebar */}
         <div className="space-y-4">
-          <div className="bg-white rounded-3xl border border-slate-200 p-5 shadow-xs space-y-4 text-xs font-semibold">
+          <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4 text-xs font-semibold">
             <h2 className="text-sm font-black text-slate-900 pb-2 border-b border-slate-100">Order Summary</h2>
 
             {/* Subtotal */}
@@ -187,7 +187,7 @@ export default function CartPage({ onNavigate }) {
             {/* Coupon Form */}
             <div className="pt-2">
               {coupon ? (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 flex items-center justify-between text-xs">
                   <span className="text-emerald-800 font-bold flex items-center gap-1.5">
                     <Tag className="w-3.5 h-3.5" /> {coupon.code} applied!
                   </span>
@@ -206,12 +206,12 @@ export default function CartPage({ onNavigate }) {
                       placeholder="Promo / Coupon Code"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs uppercase font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs uppercase font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                     />
                     <button
                       type="submit"
                       disabled={applyingCoupon || !couponInput.trim()}
-                      className="bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-bold px-3 py-2 rounded-xl text-xs cursor-pointer"
+                      className="bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-bold px-3 py-2 rounded-lg text-xs cursor-pointer"
                     >
                       {applyingCoupon ? '...' : 'Apply'}
                     </button>
@@ -228,7 +228,7 @@ export default function CartPage({ onNavigate }) {
             {/* Checkout Button */}
             <button
               onClick={() => onNavigate && onNavigate('checkout')}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl shadow-md shadow-emerald-600/20 text-xs flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-lg shadow-md shadow-emerald-600/20 text-xs flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               <span>Proceed to Checkout</span>
               <ArrowRight className="w-4 h-4" />
@@ -236,7 +236,7 @@ export default function CartPage({ onNavigate }) {
           </div>
 
           {/* Trust Badges */}
-          <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 space-y-2 text-[11px] text-slate-500">
+          <div className="bg-slate-50 border border-slate-200/80 rounded-lg p-3.5 space-y-2 text-[11px] text-slate-500">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Safe & Secure SSL Encrypted Checkout</span>

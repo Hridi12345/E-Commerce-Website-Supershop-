@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MiniCartDrawer from './components/MiniCartDrawer';
@@ -102,7 +103,7 @@ function MainApp() {
       sessId = 'sess_' + Math.random().toString(36).substring(2, 12);
       sessionStorage.setItem('sushop_session_id', sessId);
     }
-    api.trackSiteVisit(sessId, window.location.pathname).catch(() => {});
+    api.trackSiteVisit(sessId, window.location.pathname).catch(() => { });
   }, [currentRoute]);
 
   const navigateTo = (target, param = {}) => {
@@ -235,15 +236,19 @@ function MainApp() {
   }
 
   // ----------------- CUSTOMER STOREFRONT -----------------
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Header
-        onNavigate={navigateTo}
-        currentPage={currentRoute.page}
-        currentParam={routeParams}
-      />
+  const isAuthPage = currentRoute.page === 'login' || currentRoute.page === 'register';
 
-      <main className="flex-1 pb-16 md:pb-0">
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans w-full">
+      {!isAuthPage && (
+        <Header
+          onNavigate={navigateTo}
+          currentPage={currentRoute.page}
+          currentParam={routeParams}
+        />
+      )}
+
+      <main className="flex-1 w-full pb-16 md:pb-0">
         {currentRoute.page === 'home' && (
           <HomePage
             onNavigate={navigateTo}
@@ -311,7 +316,7 @@ function MainApp() {
         )}
       </main>
 
-      <Footer onNavigate={navigateTo} />
+      {!isAuthPage && <Footer onNavigate={navigateTo} />}
 
       {/* Mini-Cart Drawer */}
       <MiniCartDrawer onNavigate={navigateTo} />
@@ -332,7 +337,9 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <MainApp />
+        <WishlistProvider>
+          <MainApp />
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   );

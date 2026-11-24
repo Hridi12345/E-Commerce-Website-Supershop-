@@ -317,344 +317,40 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
 
   if (!user) {
     return (
-      <div className="max-w-4xl mx-auto py-10 px-4 space-y-6">
-        {/* Customer Guidance Banner */}
-        <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-          <div className="relative z-10 max-w-2xl space-y-2">
-            <span className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-200 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-400/30">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> Guest Browsing & Ordering is Always Open
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              SuShop Customer Services
-            </h1>
-            <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed font-normal">
-              You do <strong>not</strong> need to log in to browse products, add items to your cart, or place an order.
-              Anyone can order freely as a guest! If you would like to track your past orders or unlock and view your activated offers and discount coupons, you can open an account or sign in below.
-            </p>
+      <div className="w-full min-h-[60vh] flex items-center justify-center px-4 py-16">
+        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm max-w-md w-full text-center space-y-4">
+          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mx-auto">
+            <User className="w-6 h-6" />
           </div>
-          <div className="absolute right-0 bottom-0 translate-x-8 translate-y-8 opacity-10 pointer-events-none">
-            <ShoppingBag className="w-72 h-72 text-white" />
+          <h2 className="text-xl font-bold text-slate-900">Sign In Required</h2>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Please log in to your SuShop account to view your profile, manage your wishlist, and track your orders.
+          </p>
+          <div className="pt-2">
+            <button
+              onClick={() => onNavigate('login')}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg text-xs transition-colors cursor-pointer shadow-xs"
+            >
+              Sign In to Your Account
+            </button>
           </div>
+          <p className="text-[11px] text-slate-400">
+            Don't have an account?{' '}
+            <button onClick={() => onNavigate('register')} className="text-emerald-700 font-bold hover:underline cursor-pointer">
+              Register here
+            </button>
+          </p>
         </div>
-
-        {/* View Switcher Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 bg-slate-100 p-1.5 rounded-2xl max-w-lg mx-auto text-xs font-bold">
-          <button
-            onClick={() => setUnauthSubTab('account')}
-            className={`flex-1 py-2.5 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              unauthSubTab === 'account' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <User className="w-4 h-4 text-emerald-600" />
-            <span>Open Account / Sign In</span>
-          </button>
-          <button
-            onClick={() => setUnauthSubTab('coupons')}
-            className={`flex-1 py-2.5 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              unauthSubTab === 'coupons' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Tag className="w-4 h-4 text-emerald-600" />
-            <span>Active Offers ({coupons.length})</span>
-          </button>
-          <button
-            onClick={() => setUnauthSubTab('track')}
-            className={`flex-1 py-2.5 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-              unauthSubTab === 'track' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Truck className="w-4 h-4 text-emerald-600" />
-            <span>Track Guest Order</span>
-          </button>
-        </div>
-
-        {/* ================= TAB 1: OPTIONAL ACCOUNT CREATION / SIGN IN ================= */}
-        {unauthSubTab === 'account' && (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-            <div className="md:col-span-5 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-4">
-              <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-                Why Open a SuShop Account?
-              </h3>
-              <ul className="text-xs text-slate-600 space-y-3 font-medium">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span><strong>Order History:</strong> View every order you have placed with detailed item lists and invoices.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span><strong>Activated Offers:</strong> Access member-only coupons and automatic discount eligibility.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span><strong>1-Click Checkout:</strong> Save multiple delivery addresses (Home, Office, Parents) for instant ordering.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span><strong>Saved Wishlist:</strong> Bookmark fresh favorites to reorder whenever you need them.</span>
-                </li>
-              </ul>
-              <div className="pt-3 border-t border-slate-100">
-                <button
-                  onClick={() => onNavigate('plp')}
-                  className="w-full text-center text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 py-2.5 rounded-xl cursor-pointer transition-colors"
-                >
-                  Continue Shopping as Guest →
-                </button>
-              </div>
-            </div>
-
-            <div className="md:col-span-7 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-lg space-y-5">
-              <div className="text-center">
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                  {isRegisterMode ? 'Open a Customer Account' : 'Sign In to Your Account'}
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  {isRegisterMode ? 'Takes 15 seconds. No credit card required.' : 'Access your personal order records and activated offers.'}
-                </p>
-              </div>
-
-              {authError && (
-                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
-                  {authError}
-                </div>
-              )}
-
-              <form onSubmit={handleAuthSubmit} className="space-y-3 text-xs">
-                {isRegisterMode && (
-                  <>
-                    <div>
-                      <label className="block text-slate-600 font-bold mb-1">Full Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={authName}
-                        onChange={(e) => setAuthName(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium"
-                        placeholder="Tahmid Rahman"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-600 font-bold mb-1">Phone Number</label>
-                      <input
-                        type="tel"
-                        required
-                        value={authPhone}
-                        onChange={(e) => setAuthPhone(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium"
-                        placeholder="+8801700000000"
-                      />
-                    </div>
-                  </>
-                )}
-
-                <div>
-                  <label className="block text-slate-600 font-bold mb-1">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    value={authEmail}
-                    onChange={(e) => setAuthEmail(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium"
-                    placeholder="customer@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-600 font-bold mb-1">Password</label>
-                  <input
-                    type="password"
-                    required
-                    value={authPassword}
-                    onChange={(e) => setAuthPassword(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none font-medium"
-                    placeholder="••••••••"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition-colors cursor-pointer shadow-md shadow-emerald-200 mt-2"
-                >
-                  {isRegisterMode ? 'Create Account' : 'Sign In'}
-                </button>
-              </form>
-
-              <div className="text-center pt-2 border-t border-slate-100 text-xs">
-                <span className="text-slate-500">
-                  {isRegisterMode ? 'Already have an account? ' : "Want to open a new account? "}
-                </span>
-                <button
-                  onClick={() => { setIsRegisterMode(!isRegisterMode); setAuthError(''); }}
-                  className="text-emerald-700 font-bold hover:underline cursor-pointer"
-                >
-                  {isRegisterMode ? 'Sign In Here' : 'Register Free'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= TAB 2: ACTIVATED OFFERS & COUPONS ================= */}
-        {unauthSubTab === 'coupons' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-md space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-              <div>
-                <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                  <Tag className="w-5 h-5 text-emerald-600" /> Active Offers & Promotional Coupons
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Copy any active code below and paste it in your cart or checkout to apply instant discounts!
-                </p>
-              </div>
-              <button
-                onClick={() => onNavigate('plp')}
-                className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-emerald-700 cursor-pointer self-start sm:self-auto"
-              >
-                Shop Now With Offer →
-              </button>
-            </div>
-
-            {coupons.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-xs">
-                <Tag className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                No active promo codes right now. Please check back soon!
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {coupons.map((c, idx) => (
-                  <div key={idx} className="bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-5 rounded-2xl border border-emerald-200 text-xs space-y-2 relative shadow-xs">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <span className="text-2xl font-black text-emerald-950">
-                          {c.discount_type === 'percentage' ? `${c.discount_value}% OFF` : `৳${c.discount_value} OFF`}
-                        </span>
-                        <p className="text-[11px] text-slate-600 mt-0.5">
-                          Min. spend: <strong>৳{c.min_spend}</strong>
-                        </p>
-                      </div>
-                      <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
-                        Active
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-emerald-200/60">
-                      <span className="font-mono font-black text-emerald-900 bg-white px-2.5 py-1 rounded-lg border border-emerald-300 text-xs">
-                        {c.code}
-                      </span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(c.code);
-                          alert(`Coupon "${c.code}" copied to clipboard! Paste it at checkout to apply.`);
-                        }}
-                        className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer shadow-xs transition-colors"
-                      >
-                        Copy Code
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ================= TAB 3: INSTANT GUEST ORDER TRACKING ================= */}
-        {unauthSubTab === 'track' && (
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-md space-y-6">
-            <div>
-              <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <Truck className="w-5 h-5 text-emerald-600" /> Instant Order Tracker
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Placed an order as a guest? Enter your Order Number below to check live delivery updates without logging in.
-              </p>
-            </div>
-
-            <form onSubmit={handleTrackGuestOrder} className="flex flex-col sm:flex-row gap-3 max-w-xl">
-              <input
-                type="text"
-                required
-                value={guestOrderQuery}
-                onChange={(e) => setGuestOrderQuery(e.target.value)}
-                placeholder="e.g. DRB-261112-855097"
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs outline-none font-mono uppercase focus:border-emerald-600"
-              />
-              <button
-                type="submit"
-                disabled={guestOrderLoading}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-xs cursor-pointer transition-colors shrink-0 disabled:opacity-50"
-              >
-                {guestOrderLoading ? 'Tracking...' : 'Track Order'}
-              </button>
-            </form>
-
-            {guestOrderError && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 font-medium">
-                {guestOrderError}
-              </div>
-            )}
-
-            {guestOrderData && (
-              <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 animate-fade-in text-xs">
-                <div className="flex flex-wrap justify-between items-center gap-2 border-b border-slate-200 pb-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Order Number</span>
-                    <h3 className="text-sm font-black text-slate-900 font-mono">{guestOrderData.order_number}</h3>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Current Status</span>
-                    <div className="font-black text-emerald-700 capitalize text-sm">
-                      {guestOrderData.status ? guestOrderData.status.replace('_', ' ') : 'Processing'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
-                  <div>
-                    <span className="text-slate-400 block font-medium">Recipient</span>
-                    <span className="font-bold text-slate-800">{guestOrderData.customer_name}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block font-medium">Tracking Code</span>
-                    <span className="font-bold font-mono text-slate-800">{guestOrderData.tracking_number || 'TRK-PENDING'}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block font-medium">Payment</span>
-                    <span className="font-bold text-slate-800 uppercase">{guestOrderData.payment_method} ({guestOrderData.payment_status})</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block font-medium">Total Billed</span>
-                    <span className="font-black text-slate-900">৳{guestOrderData.total_amount}</span>
-                  </div>
-                </div>
-
-                {guestOrderData.items && guestOrderData.items.length > 0 && (
-                  <div className="pt-2 border-t border-slate-200/80">
-                    <span className="text-[11px] font-bold text-slate-700 block mb-2">Ordered Items ({guestOrderData.items.length})</span>
-                    <div className="space-y-1.5">
-                      {guestOrderData.items.map((it, idx) => (
-                        <div key={idx} className="flex justify-between items-center bg-white p-2.5 rounded-lg border border-slate-200/60">
-                          <span className="font-semibold text-slate-800">{it.product_name} × {it.quantity}</span>
-                          <span className="font-black text-slate-900">৳{it.total_price || it.unit_price * it.quantity}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Account Profile Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-emerald-950 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-emerald-950 text-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-emerald-900/50">
+          <div className="w-16 h-16 rounded-lg bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-emerald-900/50">
             {user.name.charAt(0)}
           </div>
           <div>
@@ -724,24 +420,24 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
         <div className="space-y-6">
           {/* Quick Metrics Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400">Total Lifetime Orders</span>
               <p className="text-2xl font-black text-slate-900">{orders.length}</p>
               <span className="text-[11px] text-emerald-600 font-semibold">Active customer</span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400">Total Spend (LTV)</span>
               <p className="text-2xl font-black text-emerald-700">৳{profileData?.ltv || 0}</p>
               <span className="text-[11px] text-slate-500">Verified purchases</span>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400">Saved Wishlist Items</span>
               <p className="text-2xl font-black text-slate-900">{wishlist.length}</p>
               <button onClick={() => setActiveTab('wishlist')} className="text-[11px] text-emerald-700 hover:underline font-bold">
                 View items →
               </button>
             </div>
-            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400">Saved Addresses</span>
               <p className="text-2xl font-black text-slate-900">{addresses.length}</p>
               <button onClick={() => setActiveTab('addresses')} className="text-[11px] text-emerald-700 hover:underline font-bold">
@@ -752,7 +448,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
 
           {/* Recent Orders & Default Address Preview */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+            <div className="lg:col-span-2 bg-white p-6 rounded-lg border border-slate-200 shadow-xs space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-black text-slate-900">Recent Order Activity</h3>
                 <button onClick={() => setActiveTab('orders')} className="text-xs font-bold text-emerald-700 hover:underline cursor-pointer">
@@ -797,13 +493,13 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
             </div>
 
             {/* Profile Snapshot */}
-            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-xs space-y-4">
               <h3 className="text-sm font-black text-slate-900">Default Shipping Info</h3>
               {addresses.find(a => a.is_default) || addresses[0] ? (
                 (() => {
                   const def = addresses.find(a => a.is_default) || addresses[0];
                   return (
-                    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1">
+                    <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
                       <span className="font-bold text-slate-900 block">{def.full_name}</span>
                       <p className="text-slate-600">
                         {def.building ? def.building + ', ' : ''}{def.street}
@@ -814,7 +510,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
                   );
                 })()
               ) : (
-                <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-center text-xs text-slate-500">
+                <div className="p-4 bg-slate-50 rounded-lg border border-dashed border-slate-300 text-center text-xs text-slate-500">
                   <p>No address saved yet.</p>
                   <button
                     onClick={() => handleOpenAddressModal()}
@@ -852,14 +548,14 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
           </div>
 
           {orders.length === 0 ? (
-            <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center">
+            <div className="bg-white p-12 rounded-lg border border-slate-200 text-center">
               <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-2" />
               <p className="text-xs text-slate-500">You haven't placed any orders yet.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {orders.map((o) => (
-                <div key={o.order_number} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                <div key={o.order_number} className="bg-white p-5 rounded-lg border border-slate-200 shadow-xs space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 text-xs">
                     <div>
                       <span className="font-bold text-slate-500">Order:</span>{' '}
@@ -933,7 +629,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {activeTab === 'profile' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
           {/* Profile Details Form */}
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-xs space-y-4">
             <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
               <User className="w-5 h-5 text-emerald-600" /> My Profile Information
             </h3>
@@ -988,7 +684,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
           </div>
 
           {/* Change Password Form */}
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-xs space-y-4">
             <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
               <Key className="w-5 h-5 text-emerald-600" /> Change Account Password
             </h3>
@@ -1065,7 +761,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {addresses.map((a) => (
-              <div key={a.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-2 text-xs relative flex flex-col justify-between">
+              <div key={a.id} className="bg-white p-5 rounded-lg border border-slate-200 shadow-2xs space-y-2 text-xs relative flex flex-col justify-between">
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded text-[10px]">
@@ -1110,12 +806,25 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
         </div>
       )}
 
-      {/* ================= 5. MY WISHLIST ================= */}
+      {/* ================= 5. MY WISHLIST (Requirement 15: Exclusively Wishlist Products) ================= */}
       {activeTab === 'wishlist' && (
         <div className="space-y-4">
-          <h2 className="text-lg font-black text-slate-900">My Saved Wishlist ({wishlist.length})</h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-black text-slate-900">My Wishlist ({wishlist.length})</h2>
+              <p className="text-xs text-slate-500">Products saved in your personal wishlist</p>
+            </div>
+            {wishlist.length > 0 && (
+              <button
+                onClick={() => onNavigate('plp')}
+                className="text-xs font-bold text-emerald-700 hover:text-emerald-800 cursor-pointer"
+              >
+                + Add More Products
+              </button>
+            )}
+          </div>
           {wishlist.length === 0 ? (
-            <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center">
+            <div className="bg-white p-12 rounded-lg border border-slate-200 text-center">
               <Heart className="w-12 h-12 text-slate-300 mx-auto mb-2" />
               <p className="text-xs text-slate-500">Your wishlist is currently empty.</p>
               <button
@@ -1128,7 +837,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {wishlist.map((w) => (
-                <div key={w.id} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-2 text-xs flex flex-col justify-between">
+                <div key={w.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-2xs space-y-2 text-xs flex flex-col justify-between">
                   <div>
                     <img
                       src={w.thumbnail || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300'}
@@ -1171,14 +880,14 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
         <div className="space-y-4">
           <h2 className="text-lg font-black text-slate-900">My Product Reviews & Ratings ({reviews.length})</h2>
           {reviews.length === 0 ? (
-            <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center text-xs text-slate-500">
+            <div className="bg-white p-12 rounded-lg border border-slate-200 text-center text-xs text-slate-500">
               <Star className="w-12 h-12 text-slate-300 mx-auto mb-2" />
               You haven't written any product reviews yet. Share your experience after receiving orders!
             </div>
           ) : (
             <div className="space-y-3">
               {reviews.map((r) => (
-                <div key={r.id} className="bg-white p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
+                <div key={r.id} className="bg-white p-4 rounded-lg border border-slate-200 text-xs space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-slate-900 text-sm">{r.product_name}</span>
                     <div className="flex text-amber-500">
@@ -1203,7 +912,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
           <h2 className="text-lg font-black text-slate-900">Available Coupons & Offers</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {coupons.map((c, idx) => (
-              <div key={idx} className="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-200 text-xs space-y-2 relative overflow-hidden">
+              <div key={idx} className="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-lg border border-emerald-200 text-xs space-y-2 relative overflow-hidden">
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-black text-emerald-900">
                     {c.discount_type === 'percentage' ? `${c.discount_value}% OFF` : `৳${c.discount_value} FLAT`}
@@ -1249,7 +958,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
               <div
                 key={t.id}
                 onClick={() => setSelectedTicket(t)}
-                className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer space-y-2 text-xs"
+                className="bg-white p-4 rounded-lg border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer space-y-2 text-xs"
               >
                 <div className="flex justify-between items-center">
                   <span className="font-mono font-bold text-slate-700">#{t.ticket_number}</span>
@@ -1269,14 +978,14 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
 
       {/* ================= 9. PRIVACY & GDPR ================= */}
       {activeTab === 'privacy' && (
-        <div className="max-w-2xl bg-white p-6 rounded-3xl border border-slate-200 space-y-6">
+        <div className="max-w-2xl bg-white p-6 rounded-lg border border-slate-200 space-y-6">
           <div>
             <h2 className="text-lg font-black text-slate-900">Privacy & GDPR Rights</h2>
             <p className="text-xs text-slate-500">Under global data protection regulations, you have full ownership of your data.</p>
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+            <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
               <h4 className="font-bold text-slate-900">1. Data Portability</h4>
               <p className="text-slate-600">Download a complete machine-readable archive containing all your personal details, order records, and support interactions.</p>
               <button
@@ -1287,7 +996,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
               </button>
             </div>
 
-            <div className="p-4 bg-rose-50 rounded-2xl border border-rose-200 space-y-2">
+            <div className="p-4 bg-rose-50 rounded-lg border border-rose-200 space-y-2">
               <h4 className="font-bold text-rose-900">2. Right to Erasure ("Right to be Forgotten")</h4>
               <p className="text-rose-700">Permanently erase your customer record and identity from our system. Completed past orders will be anonymized for financial compliance.</p>
               <button
@@ -1304,7 +1013,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= ADDRESS MODAL (ROAD, BUILDING, CITY) ================= */}
       {showAddressModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-2xl space-y-4 my-8 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-emerald-600" />
@@ -1415,7 +1124,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= ORDER DETAILS MODAL ================= */}
       {inspectOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-4 my-8 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-xl w-full shadow-2xl space-y-4 my-8 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base font-black text-slate-900">Order #{inspectOrder.order_number}</h3>
@@ -1424,7 +1133,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
               <button onClick={() => setInspectOrder(null)} className="text-slate-400 font-bold p-1">✕</button>
             </div>
 
-            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center">
+            <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
               <div>
                 <span className="text-[10px] text-slate-400 uppercase font-bold block">Fulfillment Status</span>
                 <span className="font-bold text-emerald-700 uppercase">{inspectOrder.status?.replace('_', ' ')}</span>
@@ -1471,7 +1180,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= COURIER TRACKING MODAL ================= */}
       {trackingModalOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base font-black text-slate-900">Live Courier Tracking</h3>
@@ -1480,7 +1189,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
               <button onClick={() => setTrackingModalOrder(null)} className="text-slate-400 font-bold">✕</button>
             </div>
 
-            <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1">
+            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200 space-y-1">
               <span className="text-[10px] font-bold text-emerald-800 uppercase">Courier Carrier</span>
               <p className="font-black text-emerald-950 text-sm">{trackingModalOrder.courier_name || 'SuShop Express 60-Min Fleet'}</p>
               <p className="text-[11px] font-mono text-emerald-800">Tracking Code: {trackingModalOrder.tracking_number || 'TRK-DHAKA-EXPRESS'}</p>
@@ -1519,7 +1228,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= OPEN NEW TICKET MODAL ================= */}
       {showNewTicketModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h3 className="text-base font-black text-slate-900">Open Customer Support Ticket</h3>
               <button onClick={() => setShowNewTicketModal(false)} className="text-slate-400 font-bold">✕</button>
@@ -1588,7 +1297,7 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= TICKET CONVERSATION MODAL ================= */}
       {selectedTicket && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-2xl space-y-4 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <div>
                 <h3 className="text-base font-black text-slate-900">Ticket #{selectedTicket.ticket_number}</h3>
@@ -1597,9 +1306,9 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
               <button onClick={() => setSelectedTicket(null)} className="text-slate-400 font-bold">✕</button>
             </div>
 
-            <div className="space-y-3 max-h-72 overflow-y-auto p-2 bg-slate-50 rounded-2xl border border-slate-100">
+            <div className="space-y-3 max-h-72 overflow-y-auto p-2 bg-slate-50 rounded-lg border border-slate-100">
               {selectedTicket.messages?.map((msg, i) => (
-                <div key={i} className={`p-3 rounded-2xl text-xs ${msg.is_agent ? 'bg-emerald-100/70 text-emerald-950 ml-4' : 'bg-white text-slate-900 mr-4 border border-slate-200'}`}>
+                <div key={i} className={`p-3 rounded-lg text-xs ${msg.is_agent ? 'bg-emerald-100/70 text-emerald-950 ml-4' : 'bg-white text-slate-900 mr-4 border border-slate-200'}`}>
                   <div className="flex justify-between text-[10px] text-slate-500 mb-1 font-semibold">
                     <span>{msg.sender}</span>
                     <span>{msg.timestamp?.slice(11, 16)}</span>
@@ -1632,14 +1341,14 @@ export default function CustomerPortalPage({ initialTab = 'overview', onNavigate
       {/* ================= RMA RETURN MODAL ================= */}
       {rmaOrderNumber && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl space-y-4 text-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h3 className="text-base font-black text-slate-900">Request RMA Return</h3>
               <button onClick={() => setRmaOrderNumber(null)} className="text-slate-400 font-bold">✕</button>
             </div>
 
             {rmaSuccess ? (
-              <div className="p-4 bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-200 text-center font-bold">
+              <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-200 text-center font-bold">
                 Return request submitted successfully! An operator will review it shortly.
               </div>
             ) : (

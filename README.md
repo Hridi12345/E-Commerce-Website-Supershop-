@@ -57,17 +57,25 @@ npm install
 # Start development server
 npm run dev
 ```
-- Storefront & Admin are running at: `http://localhost:5173`
+- **Customer Storefront:** `http://localhost:5173/`
+- **Admin Management Portal:** `http://localhost:5173/admin/login`
+- **FastAPI Backend & Swagger Docs:** `http://127.0.0.1:8000/docs`
 
 ---
 
 ## 🔑 Login Credentials
 
+The database is **automatically created and seeded** with all demo accounts when starting the backend. Use any of the credentials below to log into the Admin Portal (`/admin/login`) or Customer Portal:
+
 | Role | Email | Password | Access / Capabilities |
 | :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@sushop.com` | `admin123` | Full access to Back-Office Admin Panel (`/admin`), PIM, Inventory, Orders, CRM, Analytics |
-| **Fulfillment Operator**| `operator@sushop.com` | `operator123` | Order processing, picking, packing, and dispatch with PII masking |
-| **Customer** | `customer@sushop.com` | `customer123` | Storefront browsing, cart, checkout, order history & live tracking, GDPR privacy tools |
+| **Super Administrator** | `superadmin@supershop.com` | `superadmin123` | Master control over all system modules, RBAC roles, audit logs, and finance |
+| **Administrator** | `admin@sushop.com` | `admin123` | Full access to Back-Office Admin Panel, PIM, Inventory, Orders, CRM, Analytics |
+| **Product Manager** | `pm@supershop.com` | `pm123456` | Product catalog (PIM), categories, brands, inventory matrix |
+| **Order Manager** | `om@supershop.com` | `om123456` | Order fulfillment state machine, shipping & delivery logistics |
+| **Customer Support** | `support@supershop.com` | `support123` | Support tickets, customer CRM 360°, order inquiry assistance |
+| **Fulfillment Operator**| `operator@sushop.com` | `operator123` | Warehouse picking, packing, and dispatch with PII masking |
+| **Customer** | `customer@sushop.com` | `customer123` | Storefront browsing, cart, checkout, order history & live tracking |
 | **Wholesale / B2B** | `wholesale@sushop.com` | `wholesale123` | B2B bulk tiered volume pricing |
 
 ---
